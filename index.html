@@ -1,19 +1,57 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="light" data-theme-mode="light" data-theme-choice="auto">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BrowserHub — каталог браузеров: скачать Chrome, Яндекс Браузер, Firefox, Opera и другие</title>
-  <meta name="description" content="Каталог популярных браузеров с описанием, фильтрами по категориям и поиском. Все кнопки скачивания ведут только на официальные сайты разработчиков.">
+  <meta name="description" content="Каталог популярных браузеров с описанием, фильтрами по категориям и поиском. Все кнопки скачивания ведут только на официальные сайты разработчиков."
+        data-i18n-content="meta.description">
   <meta name="theme-color" content="#4f46e5">
-  <meta property="og:title" content="BrowserHub — каталог браузеров для скачивания">
-  <meta property="og:description" content="Chrome, Яндекс Браузер, Firefox, Opera, Opera GX, Brave, Vivaldi, Tor и другие — с фильтрами, поиском и ссылками на официальные источники.">
+  <meta property="og:title" content="BrowserHub — каталог браузеров для скачивания" data-i18n-content="meta.ogTitle">
+  <meta property="og:description" content="Chrome, Яндекс Браузер, Firefox, Opera, Opera GX, Brave, Vivaldi, Tor и другие — с фильтрами, поиском и ссылками на официальные источники." data-i18n-content="meta.ogDescription">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/icons/site.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <!-- Тема и язык применяются до первой отрисовки, чтобы не было «вспышки» чужой темы.
+       theme.js и i18n.js ниже перепроверят выбор и доведут разметку до конца. -->
+  <script>
+    (function () {
+      var THEMES = ['auto', 'light', 'sepia', 'solarized', 'nord', 'dark', 'midnight', 'dracula', 'forest', 'contrast'];
+      /* тёмные базы: нужны только для color-scheme и иконки в кнопке до старта theme.js */
+      var DARK = ['dark', 'midnight', 'dracula', 'forest', 'contrast'];
+      var LANGS = ['ru', 'en', 'de', 'es'];
+      try {
+        var choice = localStorage.getItem('bh-theme');
+        if (THEMES.indexOf(choice) === -1) choice = 'auto';
+        var resolved = choice === 'auto'
+          ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : choice;
+        var root = document.documentElement;
+        var mode = DARK.indexOf(resolved) > -1 ? 'dark' : 'light';
+        root.setAttribute('data-theme', resolved);
+        root.setAttribute('data-theme-choice', choice);
+        root.setAttribute('data-theme-mode', mode);
+        root.style.colorScheme = mode;
+
+        var lang = localStorage.getItem('bh-lang');
+        if (LANGS.indexOf(lang) === -1) {
+          lang = null;
+          var prefs = navigator.languages || [navigator.language || 'ru'];
+          for (var i = 0; i < prefs.length; i++) {
+            var base = String(prefs[i]).toLowerCase().split('-')[0];
+            if (LANGS.indexOf(base) > -1) { lang = base; break; }
+          }
+        }
+        if (lang) root.setAttribute('lang', lang);
+      } catch (e) { /* приватный режим: остаются значения по умолчанию */ }
+    })();
+  </script>
 </head>
 <body>
-  <a class="skip-link" href="#catalog">Перейти к каталогу</a>
+  <a class="skip-link" href="#catalog" data-i18n="skip.link">Перейти к каталогу</a>
+
+  <p class="visually-hidden" id="a11yStatus" role="status" aria-live="polite"></p>
 
   <!-- ============ Шапка ============ -->
   <header class="site-header">
@@ -22,15 +60,15 @@
         <img class="brand-mark" src="assets/icons/site.svg" alt="">
         <span class="brand-text">
           <span class="brand-name">BrowserHub</span>
-          <span class="brand-sub">каталог браузеров</span>
+          <span class="brand-sub" data-i18n="brand.sub">каталог браузеров</span>
         </span>
       </a>
 
-      <nav class="header-nav" aria-label="Основная навигация">
-        <a href="#featured">Рекомендуемые</a>
-        <a href="#catalog">Все браузеры</a>
-        <a href="#how">Как выбирать</a>
-        <a href="#about">О каталоге</a>
+      <nav class="header-nav" aria-label="Основная навигация" data-i18n-aria-label="nav.aria">
+        <a href="#featured" data-i18n="nav.featured">Рекомендуемые</a>
+        <a href="#catalog" data-i18n="nav.catalog">Все браузеры</a>
+        <a href="#how" data-i18n="nav.how">Как выбирать</a>
+        <a href="#about" data-i18n="nav.about">О каталоге</a>
       </nav>
 
       <div class="header-actions">
@@ -38,25 +76,51 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>
           </svg>
-          <label class="visually-hidden" for="headerSearch">Поиск браузера по названию</label>
-          <input id="headerSearch" type="search" placeholder="Поиск: Firefox, приватный…" autocomplete="off">
+          <label class="visually-hidden" for="headerSearch" data-i18n="search.header.label">Поиск браузера по названию</label>
+          <input id="headerSearch" type="search" placeholder="Поиск: Firefox, приватный…" data-i18n-placeholder="search.header.placeholder" autocomplete="off">
         </div>
 
-        <button type="button" class="icon-btn filters-toggle" id="filtersToggle" aria-expanded="false" aria-controls="filtersPanel">
+        <button type="button" class="icon-btn filters-toggle" id="filtersToggle" aria-expanded="false" aria-controls="filtersPanel"
+                aria-label="Фильтры" data-i18n-aria-label="filters.toggle">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 6h16M7 12h10M10 18h4"></path>
           </svg>
-          Фильтры
+          <span class="btn-label" data-i18n="filters.toggle">Фильтры</span>
         </button>
 
-        <button type="button" class="icon-btn" id="themeToggle" aria-label="Переключить тёмную тему">
-          <span class="icon-sun" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"></path></svg>
-          </span>
-          <span class="icon-moon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"></path></svg>
-          </span>
-        </button>
+        <!-- Выбор языка интерфейса -->
+        <div class="picker" id="langPicker">
+          <button type="button" class="icon-btn lang-btn" id="langToggle"
+                  aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu"
+                  aria-label="Сменить язык интерфейса" data-i18n-aria-label="lang.button"
+                  title="Язык интерфейса" data-i18n-title="lang.title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3.5 9h17M3.5 15h17"></path>
+              <path d="M12 3c3 3.6 3 14.4 0 18c-3-3.6-3-14.4 0-18Z"></path>
+            </svg>
+            <span class="lang-code" id="langCode">RU</span>
+          </button>
+          <div class="picker-menu picker-menu--lang" id="langMenu" role="listbox" hidden
+               aria-label="Язык интерфейса" data-i18n-aria-label="lang.title"></div>
+        </div>
+
+        <!-- Выбор темы оформления -->
+        <div class="picker" id="themePicker">
+          <button type="button" class="icon-btn" id="themeToggle"
+                  aria-haspopup="listbox" aria-expanded="false" aria-controls="themeMenu"
+                  aria-label="Выбрать тему оформления" data-i18n-aria-label="theme.button"
+                  title="Тема оформления" data-i18n-title="theme.title">
+            <span class="icon-sun" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"></path></svg>
+            </span>
+            <span class="icon-moon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"></path></svg>
+            </span>
+          </button>
+          <div class="picker-menu picker-menu--theme" id="themeMenu" role="listbox" hidden
+               aria-label="Тема оформления" data-i18n-aria-label="theme.title"></div>
+        </div>
       </div>
     </div>
   </header>
@@ -69,9 +133,9 @@
     <section class="hero">
       <div class="hero-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="container hero-inner">
-        <span class="hero-badge"><span class="dot" aria-hidden="true"></span> Все ссылки ведут только на официальные сайты разработчиков</span>
-        <h1>Скачайте <span class="grad">подходящий браузер</span> за пару минут</h1>
-        <p class="hero-lead">
+        <span class="hero-badge"><span class="dot" aria-hidden="true"></span> <span data-i18n="hero.badge">Все ссылки ведут только на официальные сайты разработчиков</span></span>
+        <h1 data-i18n-html="hero.title">Скачайте <span class="grad">подходящий браузер</span> за пару минут</h1>
+        <p class="hero-lead" data-i18n="hero.lead">
           Собрали популярные браузеры в одном каталоге: сравните скорость, приватность и потребление памяти,
           отфильтруйте по категории и перейдите на официальную страницу загрузки. Никаких сторонних сборок и зеркал.
         </p>
@@ -80,15 +144,15 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>
           </svg>
-          <label class="visually-hidden" for="heroSearch">Поиск браузера</label>
-          <input id="heroSearch" type="search" placeholder="Например: игровой, приватный, лёгкий, Opera GX…" autocomplete="off">
+          <label class="visually-hidden" for="heroSearch" data-i18n="search.hero.label">Поиск браузера</label>
+          <input id="heroSearch" type="search" placeholder="Например: игровой, приватный, лёгкий, Opera GX…" data-i18n-placeholder="search.hero.placeholder" autocomplete="off">
           <kbd>/</kbd>
         </form>
 
         <div class="hero-stats">
-          <div class="hero-stat"><b id="statCount">17</b><span>браузеров в каталоге</span></div>
-          <div class="hero-stat"><b id="statCats">7</b><span>категорий и фильтров</span></div>
-          <div class="hero-stat"><b>100%</b><span>официальные ссылки</span></div>
+          <div class="hero-stat"><b id="statCount">18</b><span id="statBrowsersLabel">браузеров в каталоге</span></div>
+          <div class="hero-stat"><b id="statCats">7</b><span id="statCatsLabel">категорий и фильтров</span></div>
+          <div class="hero-stat"><b>100%</b><span data-i18n="hero.stat.official">официальные ссылки</span></div>
         </div>
       </div>
     </section>
@@ -98,10 +162,10 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2>Рекомендуемые браузеры</h2>
-            <p>Выбор редакции: универсальные варианты, которые подойдут большинству пользователей на Windows, macOS и мобильных устройствах.</p>
+            <h2 data-i18n="featured.title">Рекомендуемые браузеры</h2>
+            <p data-i18n="featured.desc">Выбор редакции: универсальные варианты, которые подойдут большинству пользователей на Windows, macOS и мобильных устройствах.</p>
           </div>
-          <a class="section-link" href="#catalog">Смотреть все браузеры
+          <a class="section-link" href="#catalog"><span data-i18n="featured.link">Смотреть все браузеры</span>
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
           </a>
         </div>
@@ -114,25 +178,25 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2>Каталог браузеров</h2>
-            <p>Фильтруйте по категориям и платформам, ищите по названию и описанию, сортируйте по популярности или алфавиту.</p>
+            <h2 data-i18n="catalog.title">Каталог браузеров</h2>
+            <p data-i18n="catalog.desc">Фильтруйте по категориям и платформам, ищите по названию и описанию, сортируйте по популярности или алфавиту.</p>
           </div>
         </div>
 
         <div class="catalog-layout">
           <!-- Фильтры -->
-          <aside class="filters" id="filtersPanel" aria-label="Фильтры каталога">
-            <div class="filters-title">Категории</div>
+          <aside class="filters" id="filtersPanel" aria-label="Фильтры каталога" data-i18n-aria-label="filters.panel">
+            <div class="filters-title" data-i18n="filters.categories">Категории</div>
             <div class="filter-list" id="categoryList"></div>
 
-            <div class="filters-title">Платформа</div>
+            <div class="filters-title" data-i18n="filters.platform">Платформа</div>
             <div class="platform-grid" id="platformList"></div>
 
             <button type="button" class="reset-btn" id="resetFilters" hidden>
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M3 3v6h6"></path><path d="M3.5 9a9 9 0 1 0 3-6.7L3 6"></path>
               </svg>
-              Сбросить все фильтры
+              <span data-i18n="filters.reset">Сбросить все фильтры</span>
             </button>
           </aside>
 
@@ -141,12 +205,12 @@
             <div class="toolbar">
               <p class="results-count" id="resultsCount" role="status" aria-live="polite"></p>
               <div class="toolbar-right">
-                <label class="visually-hidden" for="sortSelect">Сортировка</label>
+                <label class="visually-hidden" for="sortSelect" data-i18n="sort.label">Сортировка</label>
                 <div class="select-wrap">
                   <select id="sortSelect">
-                    <option value="popularity">По популярности</option>
-                    <option value="name">По названию (А–Я)</option>
-                    <option value="featured">Сначала рекомендуемые</option>
+                    <option value="popularity" data-i18n="sort.popularity">По популярности</option>
+                    <option value="name" data-i18n="sort.name">По названию (А–Я)</option>
+                    <option value="featured" data-i18n="sort.featured">Сначала рекомендуемые</option>
                   </select>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
                 </div>
@@ -160,9 +224,9 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path><path d="M8 11h6"></path>
               </svg>
-              <h3>Браузеры не найдены</h3>
-              <p>Попробуйте изменить запрос или сбросить фильтры — возможно, нужный браузер есть в другой категории.</p>
-              <button type="button" class="btn btn-primary" id="emptyReset">Сбросить фильтры</button>
+              <h3 data-i18n="empty.title">Браузеры не найдены</h3>
+              <p data-i18n="empty.desc">Попробуйте изменить запрос или сбросить фильтры — возможно, нужный браузер есть в другой категории.</p>
+              <button type="button" class="btn btn-primary" id="emptyReset" data-i18n="empty.reset">Сбросить фильтры</button>
             </div>
           </div>
         </div>
@@ -174,8 +238,8 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2>Как выбрать браузер</h2>
-            <p>Три простых вопроса, которые помогают определиться, если не хочется читать характеристики.</p>
+            <h2 data-i18n="how.title">Как выбрать браузер</h2>
+            <p data-i18n="how.desc">Три простых вопроса, которые помогают определиться, если не хочется читать характеристики.</p>
           </div>
         </div>
 
@@ -185,9 +249,9 @@
               <span class="icon-tile lg">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3Z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
               </span>
-              <div><h3>Важна приватность?</h3><div class="vendor">Категория «Приватные»</div></div>
+              <div><h3 data-i18n="how.c1.title">Важна приватность?</h3><div class="vendor" data-i18n="how.c1.tag">Категория «Приватные»</div></div>
             </div>
-            <p>Берите Brave, Firefox, LibreWolf или Mullvad: они блокируют трекеры по умолчанию. Нужна максимальная анонимность — Tor Browser, но он медленнее.</p>
+            <p data-i18n="how.c1.text">Берите Brave, Firefox, LibreWolf или Mullvad: они блокируют трекеры по умолчанию. Нужна максимальная анонимность — Tor Browser, но он медленнее.</p>
           </article>
 
           <article class="featured-card" style="--brand:#ff1b2d">
@@ -195,9 +259,9 @@
               <span class="icon-tile lg">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#ff1b2d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12h3M8.5 10.5v3"></path><path d="M16 11.5h.01M18 13.5h.01"></path><rect x="2" y="6" width="20" height="12" rx="5"></rect></svg>
               </span>
-              <div><h3>Играете и стримите?</h3><div class="vendor">Категория «Игровые»</div></div>
+              <div><h3 data-i18n="how.c2.title">Играете и стримите?</h3><div class="vendor" data-i18n="how.c2.tag">Категория «Игровые»</div></div>
             </div>
-            <p>Opera GX умеет ограничивать память и процессор под игру, а Microsoft Edge даёт игровую панель, счётчик FPS и помощник Game Assist.</p>
+            <p data-i18n="how.c2.text">Opera GX умеет ограничивать память и процессор под игру, а Microsoft Edge даёт игровую панель, счётчик FPS и помощник Game Assist.</p>
           </article>
 
           <article class="featured-card" style="--brand:#0f9d58">
@@ -205,9 +269,9 @@
               <span class="icon-tile lg">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-3 0-8 1-10 4L5 13v4l5-5"></path><path d="M4 20l5-5"></path><path d="M13 8h4"></path></svg>
               </span>
-              <div><h3>Компьютер слабый?</h3><div class="vendor">Категория «Лёгкие»</div></div>
+              <div><h3 data-i18n="how.c3.title">Компьютер слабый?</h3><div class="vendor" data-i18n="how.c3.tag">Категория «Лёгкие»</div></div>
             </div>
-            <p>Pale Moon, Falkon, Waterfox и Chromium требуют меньше памяти и быстрее запускаются. Минус — ручные обновления и иногда урезанная совместимость.</p>
+            <p data-i18n="how.c3.text">Pale Moon, Falkon, Waterfox и Chromium требуют меньше памяти и быстрее запускаются. Минус — ручные обновления и иногда урезанная совместимость.</p>
           </article>
         </div>
       </div>
@@ -218,33 +282,33 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2>О каталоге</h2>
-            <p>Мы не размещаем установщики и не зарабатываем на загрузках: каждая кнопка «Скачать» открывает страницу разработчика браузера в новой вкладке.</p>
+            <h2 data-i18n="about.title">О каталоге</h2>
+            <p data-i18n="about.desc">Мы не размещаем установщики и не зарабатываем на загрузках: каждая кнопка «Скачать» открывает страницу разработчика браузера в новой вкладке.</p>
           </div>
         </div>
         <div class="cards-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
           <article class="card" style="--brand:#4f46e5">
             <div class="card-head">
               <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 8 7 9 4-1 7-4.6 7-9V6l-7-3Z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
-              <div class="card-title"><h3>Только официальные источники</h3></div>
+              <div class="card-title"><h3 data-i18n="about.c1.title">Только официальные источники</h3></div>
             </div>
-            <p class="card-tagline">Ссылки ведут на домены разработчиков: google.com, mozilla.org, browser.yandex.ru, opera.com, microsoft.com и другие. Сторонние сборки в каталог не попадают.</p>
+            <p class="card-tagline" data-i18n="about.c1.text">Ссылки ведут на домены разработчиков: google.com, mozilla.org, browser.yandex.ru, opera.com, microsoft.com и другие. Сторонние сборки в каталог не попадают.</p>
           </article>
 
           <article class="card" style="--brand:#a855f7">
             <div class="card-head">
               <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"></rect><path d="M3 9h18"></path></svg></span>
-              <div class="card-title"><h3>Описания без маркетинга</h3></div>
+              <div class="card-title"><h3 data-i18n="about.c2.title">Описания без маркетинга</h3></div>
             </div>
-            <p class="card-tagline">Коротко о том, чем браузер отличается: движок, лицензия, платформы и реальные плюсы. В карточке «Подробнее» — ключевые возможности и предупреждения.</p>
+            <p class="card-tagline" data-i18n="about.c2.text">Коротко о том, чем браузер отличается: движок, лицензия, платформы и реальные плюсы. В карточке «Подробнее» — ключевые возможности и предупреждения.</p>
           </article>
 
           <article class="card" style="--brand:#0f9d58">
             <div class="card-head">
               <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Z"></path><path d="m3 14 9 5 9-5"></path></svg></span>
-              <div class="card-title"><h3>Быстрый подбор</h3></div>
+              <div class="card-title"><h3 data-i18n="about.c3.title">Быстрый подбор</h3></div>
             </div>
-            <p class="card-tagline">Поиск по названию и описанию, фильтры по категориям и платформам, сортировка и сохранение фильтров в ссылке — можно поделиться подборкой.</p>
+            <p class="card-tagline" data-i18n="about.c3.text">Поиск по названию и описанию, фильтры по категориям и платформам, сортировка и сохранение фильтров в ссылке — можно поделиться подборкой.</p>
           </article>
         </div>
       </div>
@@ -260,39 +324,39 @@
             <img class="brand-mark" src="assets/icons/site.svg" alt="">
             <span class="brand-text"><span class="brand-name">BrowserHub</span></span>
           </a>
-          <p>Независимый каталог браузеров: описания, фильтры и ссылки на официальные страницы загрузки. Мы не связаны с разработчиками браузеров и не размещаем собственные сборки.</p>
+          <p data-i18n="footer.about">Независимый каталог браузеров: описания, фильтры и ссылки на официальные страницы загрузки. Мы не связаны с разработчиками браузеров и не размещаем собственные сборки.</p>
         </div>
 
         <div class="footer-col">
-          <h4>Категории</h4>
+          <h4 data-i18n="footer.categories">Категории</h4>
           <ul>
-            <li><a href="#catalog" data-category-link="privacy">Приватные браузеры</a></li>
-            <li><a href="#catalog" data-category-link="gaming">Игровые браузеры</a></li>
-            <li><a href="#catalog" data-category-link="lightweight">Лёгкие браузеры</a></li>
-            <li><a href="#catalog" data-category-link="mobile">Браузеры для телефона</a></li>
+            <li><a href="#catalog" data-category-link="privacy" data-i18n="footer.privacy">Приватные браузеры</a></li>
+            <li><a href="#catalog" data-category-link="gaming" data-i18n="footer.gaming">Игровые браузеры</a></li>
+            <li><a href="#catalog" data-category-link="lightweight" data-i18n="footer.lightweight">Лёгкие браузеры</a></li>
+            <li><a href="#catalog" data-category-link="mobile" data-i18n="footer.mobile">Браузеры для телефона</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4>Навигация</h4>
+          <h4 data-i18n="footer.nav">Навигация</h4>
           <ul>
-            <li><a href="#featured">Рекомендуемые</a></li>
-            <li><a href="#catalog">Все браузеры</a></li>
-            <li><a href="#how">Как выбирать</a></li>
-            <li><a href="#about">О каталоге</a></li>
+            <li><a href="#featured" data-i18n="nav.featured">Рекомендуемые</a></li>
+            <li><a href="#catalog" data-i18n="nav.catalog">Все браузеры</a></li>
+            <li><a href="#how" data-i18n="nav.how">Как выбирать</a></li>
+            <li><a href="#about" data-i18n="nav.about">О каталоге</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <span>© <span id="year">2026</span> BrowserHub. Названия и логотипы принадлежат их правообладателям.</span>
-        <span>Обновлено: сентябрь 2026</span>
+        <span id="footerRights">© <span id="year">2026</span> BrowserHub. Названия и логотипы принадлежат их правообладателям.</span>
+        <span id="footerUpdated">Обновлено: сентябрь 2026</span>
       </div>
     </div>
   </footer>
 
   <!-- Кнопка «наверх» -->
-  <button type="button" class="to-top" id="toTop" aria-label="Наверх">
+  <button type="button" class="to-top" id="toTop" aria-label="Наверх" data-i18n-aria-label="toTop">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 6-6 6 6"></path></svg>
   </button>
 
@@ -321,6 +385,9 @@
   </div>
 
   <script src="assets/js/data.js"></script>
+  <script src="assets/js/content.en.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/theme.js"></script>
   <script src="assets/js/cursor.js"></script>
   <script src="assets/js/app.js"></script>
 </body>

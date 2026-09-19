@@ -32,6 +32,10 @@
   --warn-bg: #fff7e6;
   --warn-border: #ffe0a3;
   --warn-text: #8a5a00;
+  /* Цвета градиентов (заголовок героя, индикатор прокрутки, пятна на фоне).
+     Вынесены в переменные, чтобы каждая тема задавала свою палитру. */
+  --grad-2: #a855f7;
+  --grad-3: #ec4899;
   --shadow-xs: 0 1px 2px rgba(16, 24, 40, .05);
   --shadow-sm: 0 2px 8px rgba(16, 24, 40, .06);
   --shadow-md: 0 10px 28px rgba(16, 24, 40, .10);
@@ -46,7 +50,17 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
-[data-theme="dark"] {
+/* ==========================================================================
+   Тёмная база — общие токены для всех тёмных тем.
+   Перечисление селекторов и есть «группа тёмных»: конкретные темы ниже
+   переопределяют только то, что у них отличается. Добавить новую тёмную
+   тему = дописать селектор сюда и блок с отличиями внизу.
+   ========================================================================== */
+[data-theme="dark"],
+[data-theme="midnight"],
+[data-theme="dracula"],
+[data-theme="forest"],
+[data-theme="contrast"] {
   --bg: #0b0f17;
   --bg-grad-1: #16203a;
   --bg-grad-2: #0b0f17;
@@ -71,7 +85,222 @@
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, .35);
   --shadow-md: 0 12px 30px rgba(0, 0, 0, .45);
   --shadow-lg: 0 28px 70px rgba(0, 0, 0, .6);
+  color-scheme: dark;
 }
+
+/* ---------- Светлые темы: только цветовые отличия ---------- */
+[data-theme="light"],
+[data-theme="sepia"],
+[data-theme="solarized"],
+[data-theme="nord"] { color-scheme: light; }
+
+/* Тёплая «бумажная» тема — меньше синего, комфортна вечером */
+[data-theme="sepia"] {
+  --bg: #f3ead9;
+  --bg-grad-1: #efe2c9;
+  --bg-grad-2: #f8f2e6;
+  --surface: #fdf8ee;
+  --surface-2: #f5ecda;
+  --surface-3: #ece0c9;
+  --border: #e0d2b8;
+  --border-strong: #cdba98;
+  --text: #3a2f1f;
+  --text-soft: #5b4b33;
+  --muted: #857150;
+  --accent: #9a6b3f;
+  --accent-hover: #7f5631;
+  --accent-soft: #f0e2cd;
+  --accent-border: #d3b993;
+  --on-accent: #ffffff;
+  --success: #4b7f3f;
+  --warn-bg: #fdf3dd;
+  --warn-border: #e8d3a6;
+  --warn-text: #7a5312;
+  --grad-2: #c98a4b;
+  --grad-3: #b25f4a;
+  --shadow-xs: 0 1px 2px rgba(74, 56, 30, .07);
+  --shadow-sm: 0 2px 8px rgba(74, 56, 30, .09);
+  --shadow-md: 0 10px 28px rgba(74, 56, 30, .13);
+  --shadow-lg: 0 24px 60px rgba(74, 56, 30, .2);
+}
+
+/* Solarized: низкий контраст и приглушённые тона */
+[data-theme="solarized"] {
+  --bg: #fdf6e3;
+  --bg-grad-1: #f4ead2;
+  --bg-grad-2: #fdf6e3;
+  --surface: #fffbf0;
+  --surface-2: #f4ecd8;
+  --surface-3: #ebe3cc;
+  --border: #e2d9bf;
+  --border-strong: #cec4a4;
+  --text: #073642;
+  --text-soft: #2f5560;
+  --muted: #6d7d7a;
+  --accent: #268bd2;
+  --accent-hover: #1f74b0;
+  --accent-soft: #e3f0f9;
+  --accent-border: #a9cfe8;
+  --on-accent: #ffffff;
+  --success: #7d8f00;
+  --warn-bg: #fbf3d9;
+  --warn-border: #e6d79f;
+  --warn-text: #7a6512;
+  --grad-2: #6c71c4;
+  --grad-3: #d33682;
+  --shadow-xs: 0 1px 2px rgba(7, 54, 66, .06);
+  --shadow-sm: 0 2px 8px rgba(7, 54, 66, .08);
+  --shadow-md: 0 10px 28px rgba(7, 54, 66, .12);
+  --shadow-lg: 0 24px 60px rgba(7, 54, 66, .18);
+}
+
+/* Nord: холодные серо-синие тона */
+[data-theme="nord"] {
+  --bg: #eceff4;
+  --bg-grad-1: #e2e8f1;
+  --bg-grad-2: #f2f5f9;
+  --surface: #ffffff;
+  --surface-2: #e9eef5;
+  --surface-3: #dde4ee;
+  --border: #d5dde8;
+  --border-strong: #bfcad9;
+  --text: #2e3440;
+  --text-soft: #45505f;
+  --muted: #69758a;
+  --accent: #5e81ac;
+  --accent-hover: #4c6d95;
+  --accent-soft: #e3ebf4;
+  --accent-border: #b3c5da;
+  --on-accent: #ffffff;
+  --success: #4f8a5b;
+  --warn-bg: #fbf2df;
+  --warn-border: #e8d7ae;
+  --warn-text: #7d5f18;
+  --grad-2: #88c0d0;
+  --grad-3: #b48ead;
+}
+
+/* ---------- Тёмные темы: отличия от тёмной базы ---------- */
+
+/* Чистый чёрный: на OLED-экранах пиксели выключаются полностью */
+[data-theme="midnight"] {
+  --bg: #000000;
+  --bg-grad-1: #0a1220;
+  --bg-grad-2: #000000;
+  --surface: #07090d;
+  --surface-2: #10141a;
+  --surface-3: #191f27;
+  --border: #1e252e;
+  --border-strong: #2f3a47;
+  --text: #f2f6fb;
+  --text-soft: #c8d2de;
+  --muted: #93a1b2;
+  --accent: #5b9dff;
+  --accent-hover: #7cb2ff;
+  --accent-soft: #0d1b31;
+  --accent-border: #24456f;
+  --on-accent: #000000;
+  --grad-2: #3b82f6;
+  --grad-3: #22d3ee;
+}
+
+/* Dracula: фиолетовый акцент */
+[data-theme="dracula"] {
+  --bg: #282a36;
+  --bg-grad-1: #343746;
+  --bg-grad-2: #21222c;
+  --surface: #2f3140;
+  --surface-2: #383a4a;
+  --surface-3: #44475a;
+  --border: #40424f;
+  --border-strong: #565869;
+  --text: #f8f8f2;
+  --text-soft: #d6d8e0;
+  --muted: #a3a7b7;
+  --accent: #bd93f9;
+  --accent-hover: #cfaaff;
+  --accent-soft: #3a3350;
+  --accent-border: #5b4a86;
+  --on-accent: #21222c;
+  --success: #50fa7b;
+  --warn-bg: #3b3520;
+  --warn-border: #5e5330;
+  --warn-text: #f1fa8c;
+  --grad-2: #bd93f9;
+  --grad-3: #ff79c6;
+}
+
+/* Лесная: спокойный тёмно-зелёный */
+[data-theme="forest"] {
+  --bg: #0c1712;
+  --bg-grad-1: #14261c;
+  --bg-grad-2: #0c1712;
+  --surface: #12201a;
+  --surface-2: #172a21;
+  --surface-3: #1f362a;
+  --border: #223a2c;
+  --border-strong: #32503e;
+  --text: #e6f2ea;
+  --text-soft: #c2d8ca;
+  --muted: #8fa89a;
+  --accent: #4ade80;
+  --accent-hover: #6ee79b;
+  --accent-soft: #16301f;
+  --accent-border: #2f6b45;
+  --on-accent: #06170e;
+  --success: #4ade80;
+  --warn-bg: #2a2415;
+  --warn-border: #4d4322;
+  --warn-text: #e8cf82;
+  --grad-2: #86efac;
+  --grad-3: #34d399;
+}
+
+/* Высокий контраст: для слабого зрения и яркого солнца.
+   Тени убираем совсем — читаемость важнее объёма. */
+[data-theme="contrast"] {
+  --bg: #000000;
+  --bg-grad-1: #000000;
+  --bg-grad-2: #000000;
+  --surface: #000000;
+  --surface-2: #101010;
+  --surface-3: #1c1c1c;
+  --border: #6b6b6b;
+  --border-strong: #b0b0b0;
+  --text: #ffffff;
+  --text-soft: #ffffff;
+  --muted: #d4d4d4;
+  --accent: #ffd400;
+  --accent-hover: #ffe14d;
+  --accent-soft: #2a2400;
+  --accent-border: #ffd400;
+  --on-accent: #000000;
+  --success: #4dff88;
+  --warn-bg: #201c00;
+  --warn-border: #ffd400;
+  --warn-text: #ffe14d;
+  --grad-2: #ffd400;
+  --grad-3: #ffffff;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}
+
+[data-theme="contrast"] .card,
+[data-theme="contrast"] .featured-card,
+[data-theme="contrast"] .filters,
+[data-theme="contrast"] .icon-btn,
+[data-theme="contrast"] .btn,
+[data-theme="contrast"] .header-search,
+[data-theme="contrast"] .picker-menu,
+[data-theme="contrast"] .hero-search,
+[data-theme="contrast"] .modal { border-width: 2px; }
+
+[data-theme="contrast"] .btn-primary,
+[data-theme="contrast"] .btn-primary:hover { box-shadow: none; }
+
+[data-theme="contrast"] .hero-blobs { display: none; }
 
 * { box-sizing: border-box; }
 
@@ -143,7 +372,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .header-nav a:hover { background: var(--surface-2); color: var(--text); }
 
-.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; min-width: 0; }
 
 .header-search {
   position: relative; display: flex; align-items: center;
@@ -176,8 +405,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 .icon-btn:active { transform: scale(.95); }
 .icon-btn svg { width: 18px; height: 18px; }
 .icon-btn .icon-moon { display: none; }
-[data-theme="dark"] .icon-btn .icon-sun { display: none; }
-[data-theme="dark"] .icon-btn .icon-moon { display: block; }
+/* Иконка в кнопке тем: солнце для светлых тем, луна для тёмных.
+   Ориентируемся на data-theme-mode, который ставит theme.js — иначе пришлось
+   бы перечислять все тёмные темы по именам и следить за этим списком. */
+[data-theme-mode="dark"] .icon-btn .icon-sun { display: none; }
+[data-theme-mode="dark"] .icon-btn .icon-moon { display: block; }
 
 .filters-toggle { display: none; gap: 8px; width: auto; padding: 0 14px; border-radius: var(--radius-full); font-size: 14px; font-weight: 500; }
 
@@ -207,7 +439,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 22%, transparent); }
 .hero h1 { font-size: clamp(32px, 5vw, 52px); letter-spacing: -.035em; }
 .hero h1 .grad {
-  background: linear-gradient(100deg, var(--accent), #a855f7 60%, #ec4899);
+  background: linear-gradient(100deg, var(--accent), var(--grad-2) 60%, var(--grad-3));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .hero-lead { margin-top: 16px; font-size: clamp(15.5px, 1.6vw, 18px); color: var(--text-soft); max-width: 640px; }
@@ -700,7 +932,7 @@ html.custom-cursor * { cursor: none !important; }
   position: fixed; top: var(--header-h); left: 0; right: 0; height: 2px;
   z-index: 59; transform: scaleX(0); transform-origin: 0 50%;
   opacity: 0; transition: opacity .3s var(--ease);
-  background: linear-gradient(90deg, var(--accent), #a855f7 55%, #ec4899);
+  background: linear-gradient(90deg, var(--accent), var(--grad-2) 55%, var(--grad-3));
   pointer-events: none;
 }
 .scroll-progress.is-active { opacity: 1; }
@@ -708,7 +940,7 @@ html.custom-cursor * { cursor: none !important; }
 /* Шапка: мягкая тень при прокрутке */
 .site-header { transition: box-shadow .3s var(--ease); }
 .site-header.is-scrolled { box-shadow: 0 8px 26px rgba(16, 24, 40, .07); }
-[data-theme="dark"] .site-header.is-scrolled { box-shadow: 0 8px 26px rgba(0, 0, 0, .5); }
+[data-theme-mode="dark"] .site-header.is-scrolled { box-shadow: 0 8px 26px rgba(0, 0, 0, .5); }
 
 /* Ссылки в навигации: подчёркивание «наезжает» слева */
 .header-nav a { position: relative; }
@@ -782,12 +1014,12 @@ html.custom-cursor * { cursor: none !important; }
 }
 .hero-blobs span:nth-child(2) {
   width: 260px; height: 260px; bottom: -130px; left: 40%; opacity: .42;
-  background: color-mix(in srgb, #ec4899 42%, transparent);
+  background: color-mix(in srgb, var(--grad-3) 42%, transparent);
   animation: blob-b 21s ease-in-out infinite;
 }
 .hero-blobs span:nth-child(3) {
   width: 210px; height: 210px; top: 26%; right: 30%; opacity: .34;
-  background: color-mix(in srgb, #a855f7 40%, transparent);
+  background: color-mix(in srgb, var(--grad-2) 40%, transparent);
   animation: blob-a 26s ease-in-out infinite reverse;
 }
 @keyframes blob-a {
@@ -834,4 +1066,97 @@ html.custom-cursor * { cursor: none !important; }
 
 @media print {
   .cursor-layer, .scroll-progress { display: none !important; }
+}
+
+/* ==========================================================================
+   11. Выбор языка и темы оформления
+   Два одинаковых по устройству выпадающих меню в шапке: кнопка + список
+   опций. Разметку списков строят i18n.js / theme.js, поведение — app.js.
+   ========================================================================== */
+.picker { position: relative; display: flex; }
+
+.lang-btn { width: auto; gap: 6px; padding: 0 11px 0 9px; }
+.lang-btn svg { width: 16px; height: 16px; }
+.lang-code { font-size: 11.5px; font-weight: 800; letter-spacing: .05em; }
+
+.picker-menu {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 80;
+  min-width: 248px; max-width: calc(100vw - 32px);
+  max-height: min(72vh, 480px); overflow-y: auto; overscroll-behavior: contain;
+  padding: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
+  animation: picker-in .18s var(--ease) both;
+}
+.picker-menu[hidden] { display: none; }
+.picker-menu--lang { min-width: 232px; }
+
+@keyframes picker-in {
+  from { opacity: 0; transform: translateY(-7px) scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.picker-group {
+  padding: 9px 10px 5px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--muted);
+}
+.picker-group:first-child { padding-top: 4px; }
+
+.picker-option, .theme-option {
+  display: flex; align-items: center; gap: 11px; width: 100%;
+  padding: 8px 10px; border: 0; background: transparent;
+  border-radius: var(--radius-sm); text-align: left; color: var(--text);
+  transition: background .16s var(--ease), color .16s var(--ease);
+}
+.picker-option:hover, .theme-option:hover { background: var(--surface-2); }
+.picker-option[aria-selected="true"],
+.theme-option[aria-selected="true"] { background: var(--accent-soft); }
+
+.picker-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.picker-text b { font-size: 14px; font-weight: 600; }
+.picker-text em { font-size: 11.5px; font-style: normal; color: var(--muted); }
+
+.picker-check {
+  width: 15px; height: 15px; flex-shrink: 0; margin-left: auto;
+  color: var(--accent); opacity: 0; transition: opacity .16s var(--ease);
+}
+.picker-check svg { width: 100%; height: 100%; }
+[role="option"][aria-selected="true"] > .picker-check { opacity: 1; }
+
+/* Превью темы: кружок, разделённый по диагонали — фон и акцент */
+.theme-swatch {
+  width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(135deg, var(--sw1) 0 50%, var(--sw2) 50% 100%);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--surface) 70%, transparent);
+}
+
+.lang-chip {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 10.5px; font-weight: 800; letter-spacing: .04em; color: var(--text-soft);
+  transition: background .16s var(--ease), color .16s var(--ease), border-color .16s var(--ease);
+}
+[role="option"][aria-selected="true"] > .lang-chip {
+  background: var(--accent); border-color: var(--accent); color: var(--on-accent);
+}
+
+/* На узких экранах подписи кнопок прячем: остаются иконки */
+@media (max-width: 780px) {
+  .header-actions { gap: 8px; }
+  .filters-toggle .btn-label { display: none; }
+  .filters-toggle { width: 38px; padding: 0; }
+}
+
+@media (max-width: 480px) {
+  .header-actions { gap: 6px; }
+  .lang-btn { width: 38px; padding: 0; }
+  .lang-code { display: none; }
+  .icon-btn { width: 36px; height: 36px; }
+  .header-search { width: 38px; }
+  .filters-toggle { width: 36px; }
+  .picker-menu { right: auto; left: 0; min-width: 0; width: min(280px, calc(100vw - 32px)); }
+  .picker-menu--theme { right: 0; left: auto; }
 }
