@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrowserHub — каталог браузеров: скачать Chrome, Яндекс Браузер, Firefox, Opera и другие</title>
+  <meta name="description" content="Каталог популярных браузеров с описанием, фильтрами по категориям и поиском. Все кнопки скачивания ведут только на официальные сайты разработчиков.">
+  <meta name="theme-color" content="#4f46e5">
+  <meta property="og:title" content="BrowserHub — каталог браузеров для скачивания">
+  <meta property="og:description" content="Chrome, Яндекс Браузер, Firefox, Opera, Opera GX, Brave, Vivaldi, Tor и другие — с фильтрами, поиском и ссылками на официальные источники.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/icons/site.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#catalog">Перейти к каталогу</a>
+
+  <!-- ============ Шапка ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top">
+        <img class="brand-mark" src="assets/icons/site.svg" alt="">
+        <span class="brand-text">
+          <span class="brand-name">BrowserHub</span>
+          <span class="brand-sub">каталог браузеров</span>
+        </span>
+      </a>
+
+      <nav class="header-nav" aria-label="Основная навигация">
+        <a href="#featured">Рекомендуемые</a>
+        <a href="#catalog">Все браузеры</a>
+        <a href="#how">Как выбирать</a>
+        <a href="#about">О каталоге</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="header-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>
+          </svg>
+          <label class="visually-hidden" for="headerSearch">Поиск браузера по названию</label>
+          <input id="headerSearch" type="search" placeholder="Поиск: Firefox, приватный…" autocomplete="off">
+        </div>
+
+        <button type="button" class="icon-btn filters-toggle" id="filtersToggle" aria-expanded="false" aria-controls="filtersPanel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 6h16M7 12h10M10 18h4"></path>
+          </svg>
+          Фильтры
+        </button>
+
+        <button type="button" class="icon-btn" id="themeToggle" aria-label="Переключить тёмную тему">
+          <span class="icon-sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"></path></svg>
+          </span>
+          <span class="icon-moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"></path></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <span class="hero-badge"><span class="dot" aria-hidden="true"></span> Все ссылки ведут только на официальные сайты разработчиков</span>
+        <h1>Скачайте <span class="grad">подходящий браузер</span> за пару минут</h1>
+        <p class="hero-lead">
+          Собрали популярные браузеры в одном каталоге: сравните скорость, приватность и потребление памяти,
+          отфильтруйте по категории и перейдите на официальную страницу загрузки. Никаких сторонних сборок и зеркал.
+        </p>
+
+        <form class="hero-search" role="search" onsubmit="return false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>
+          </svg>
+          <label class="visually-hidden" for="heroSearch">Поиск браузера</label>
+          <input id="heroSearch" type="search" placeholder="Например: игровой, приватный, лёгкий, Opera GX…" autocomplete="off">
+          <kbd>/</kbd>
+        </form>
+
+        <div class="hero-stats">
+          <div class="hero-stat"><b id="statCount">17</b><span>браузеров в каталоге</span></div>
+          <div class="hero-stat"><b id="statCats">7</b><span>категорий и фильтров</span></div>
+          <div class="hero-stat"><b>100%</b><span>официальные ссылки</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Рекомендуемые ============ -->
+    <section class="section" id="featured">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Рекомендуемые браузеры</h2>
+            <p>Выбор редакции: универсальные варианты, которые подойдут большинству пользователей на Windows, macOS и мобильных устройствах.</p>
+          </div>
+          <a class="section-link" href="#catalog">Смотреть все браузеры
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div class="featured-grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <!-- ============ Каталог ============ -->
+    <section class="section catalog" id="catalog">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Каталог браузеров</h2>
+            <p>Фильтруйте по категориям и платформам, ищите по названию и описанию, сортируйте по популярности или алфавиту.</p>
+          </div>
+        </div>
+
+        <div class="catalog-layout">
+          <!-- Фильтры -->
+          <aside class="filters" id="filtersPanel" aria-label="Фильтры каталога">
+            <div class="filters-title">Категории</div>
+            <div class="filter-list" id="categoryList"></div>
+
+            <div class="filters-title">Платформа</div>
+            <div class="platform-grid" id="platformList"></div>
+
+            <button type="button" class="reset-btn" id="resetFilters" hidden>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 3v6h6"></path><path d="M3.5 9a9 9 0 1 0 3-6.7L3 6"></path>
+              </svg>
+              Сбросить все фильтры
+            </button>
+          </aside>
+
+          <!-- Список -->
+          <div>
+            <div class="toolbar">
+              <p class="results-count" id="resultsCount" role="status" aria-live="polite"></p>
+              <div class="toolbar-right">
+                <label class="visually-hidden" for="sortSelect">Сортировка</label>
+                <div class="select-wrap">
+                  <select id="sortSelect">
+                    <option value="popularity">По популярности</option>
+                    <option value="name">По названию (А–Я)</option>
+                    <option value="featured">Сначала рекомендуемые</option>
+                  </select>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="active-filters" id="activeFilters" hidden></div>
+            <div class="cards-grid" id="cardsGrid"></div>
+
+            <div class="empty-state" id="emptyState" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path><path d="M8 11h6"></path>
+              </svg>
+              <h3>Браузеры не найдены</h3>
+              <p>Попробуйте изменить запрос или сбросить фильтры — возможно, нужный браузер есть в другой категории.</p>
+              <button type="button" class="btn btn-primary" id="emptyReset">Сбросить фильтры</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Как выбирать ============ -->
+    <section class="section" id="how" style="padding-top:0">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Как выбрать браузер</h2>
+            <p>Три простых вопроса, которые помогают определиться, если не хочется читать характеристики.</p>
+          </div>
+        </div>
+
+        <div class="featured-grid">
+          <article class="featured-card" style="--brand:#4f46e5">
+            <div class="featured-top">
+              <span class="icon-tile lg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3Z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+              </span>
+              <div><h3>Важна приватность?</h3><div class="vendor">Категория «Приватные»</div></div>
+            </div>
+            <p>Берите Brave, Firefox, LibreWolf или Mullvad: они блокируют трекеры по умолчанию. Нужна максимальная анонимность — Tor Browser, но он медленнее.</p>
+          </article>
+
+          <article class="featured-card" style="--brand:#ff1b2d">
+            <div class="featured-top">
+              <span class="icon-tile lg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ff1b2d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12h3M8.5 10.5v3"></path><path d="M16 11.5h.01M18 13.5h.01"></path><rect x="2" y="6" width="20" height="12" rx="5"></rect></svg>
+              </span>
+              <div><h3>Играете и стримите?</h3><div class="vendor">Категория «Игровые»</div></div>
+            </div>
+            <p>Opera GX умеет ограничивать память и процессор под игру, а Microsoft Edge даёт игровую панель, счётчик FPS и помощник Game Assist.</p>
+          </article>
+
+          <article class="featured-card" style="--brand:#0f9d58">
+            <div class="featured-top">
+              <span class="icon-tile lg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-3 0-8 1-10 4L5 13v4l5-5"></path><path d="M4 20l5-5"></path><path d="M13 8h4"></path></svg>
+              </span>
+              <div><h3>Компьютер слабый?</h3><div class="vendor">Категория «Лёгкие»</div></div>
+            </div>
+            <p>Pale Moon, Falkon, Waterfox и Chromium требуют меньше памяти и быстрее запускаются. Минус — ручные обновления и иногда урезанная совместимость.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ О каталоге ============ -->
+    <section class="section" id="about" style="padding-top:0">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>О каталоге</h2>
+            <p>Мы не размещаем установщики и не зарабатываем на загрузках: каждая кнопка «Скачать» открывает страницу разработчика браузера в новой вкладке.</p>
+          </div>
+        </div>
+        <div class="cards-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+          <article class="card" style="--brand:#4f46e5">
+            <div class="card-head">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 8 7 9 4-1 7-4.6 7-9V6l-7-3Z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
+              <div class="card-title"><h3>Только официальные источники</h3></div>
+            </div>
+            <p class="card-tagline">Ссылки ведут на домены разработчиков: google.com, mozilla.org, browser.yandex.ru, opera.com, microsoft.com и другие. Сторонние сборки в каталог не попадают.</p>
+          </article>
+
+          <article class="card" style="--brand:#a855f7">
+            <div class="card-head">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"></rect><path d="M3 9h18"></path></svg></span>
+              <div class="card-title"><h3>Описания без маркетинга</h3></div>
+            </div>
+            <p class="card-tagline">Коротко о том, чем браузер отличается: движок, лицензия, платформы и реальные плюсы. В карточке «Подробнее» — ключевые возможности и предупреждения.</p>
+          </article>
+
+          <article class="card" style="--brand:#0f9d58">
+            <div class="card-head">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Z"></path><path d="m3 14 9 5 9-5"></path></svg></span>
+              <div class="card-title"><h3>Быстрый подбор</h3></div>
+            </div>
+            <p class="card-tagline">Поиск по названию и описанию, фильтры по категориям и платформам, сортировка и сохранение фильтров в ссылке — можно поделиться подборкой.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Подвал ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a class="brand" href="#top">
+            <img class="brand-mark" src="assets/icons/site.svg" alt="">
+            <span class="brand-text"><span class="brand-name">BrowserHub</span></span>
+          </a>
+          <p>Независимый каталог браузеров: описания, фильтры и ссылки на официальные страницы загрузки. Мы не связаны с разработчиками браузеров и не размещаем собственные сборки.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Категории</h4>
+          <ul>
+            <li><a href="#catalog" data-category-link="privacy">Приватные браузеры</a></li>
+            <li><a href="#catalog" data-category-link="gaming">Игровые браузеры</a></li>
+            <li><a href="#catalog" data-category-link="lightweight">Лёгкие браузеры</a></li>
+            <li><a href="#catalog" data-category-link="mobile">Браузеры для телефона</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="#featured">Рекомендуемые</a></li>
+            <li><a href="#catalog">Все браузеры</a></li>
+            <li><a href="#how">Как выбирать</a></li>
+            <li><a href="#about">О каталоге</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> BrowserHub. Названия и логотипы принадлежат их правообладателям.</span>
+        <span>Обновлено: сентябрь 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Кнопка «наверх» -->
+  <button type="button" class="to-top" id="toTop" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 6-6 6 6"></path></svg>
+  </button>
+
+  <!-- Модальное окно -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modal">
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="container" style="padding:24px 20px;font-size:15px">
+      Для работы фильтров и поиска нужен JavaScript. Список браузеров и официальные ссылки доступны напрямую:
+      Google Chrome — google.com/chrome, Яндекс Браузер — browser.yandex.ru, Mozilla Firefox — mozilla.org/firefox,
+      Opera — opera.com, Opera GX — opera.com/gx, Microsoft Edge — microsoft.com/edge, Safari — apple.com/safari,
+      Brave — brave.com, Vivaldi — vivaldi.com, Tor Browser — torproject.org, LibreWolf — librewolf.net,
+      Mullvad Browser — mullvad.net/browser, DuckDuckGo — duckduckgo.com/app, Waterfox — waterfox.net,
+      Pale Moon — palemoon.org, Chromium — chromium.org, Falkon — falkon.org, Arc — arc.net.
+    </div>
+  </noscript>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
