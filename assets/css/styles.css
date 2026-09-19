@@ -594,3 +594,244 @@ select:hover { border-color: var(--border-strong); }
 @media print {
   .site-header, .filters, .to-top, .modal-backdrop, .hero-search { display: none !important; }
 }
+
+/* ==========================================================================
+   9. Кастомный курсор: точка + догоняющий кружок
+   Слой включается только при наличии точного указателя (класс на <html>
+   ставит cursor.js), поэтому на тач-экранах ничего не ломается.
+   ========================================================================== */
+.cursor-layer {
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none; overflow: hidden;
+}
+.cursor-layer[hidden] { display: none !important; }
+
+html.custom-cursor,
+html.custom-cursor * { cursor: none !important; }
+
+/* ВАЖНО: у обоих элементов коробка 0×0 и начало координат — точка привязки к курсору.
+   Внутренний span центрируется отрицательными отступами и «свисает» из нулевой коробки.
+   Если вернуть коробке размер (убрать width/height), transform-origin уедет в её центр:
+   тогда поворот и растягивание кольца начнут смещать видимый круг в сторону — он будет
+   дёргаться из стороны в сторону при смене направления движения. */
+.cursor-dot, .cursor-ring {
+  position: absolute; top: 0; left: 0;
+  width: 0; height: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity .22s linear;
+}
+.cursor-layer.is-visible .cursor-dot,
+.cursor-layer.is-visible .cursor-ring { opacity: 1; }
+
+/* Точка — маленькая, почти мгновенно следует за указателем */
+.cursor-dot span {
+  display: block; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  /* окантовка цветом фона + свечение: точка читается и на светлом, и на цветном фоне */
+  box-shadow:
+    0 0 0 1.5px var(--surface),
+    0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 0 16px color-mix(in srgb, var(--accent) 55%, transparent);
+  transition: transform .2s var(--ease), background-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+/* Кружок — догоняет точку с инерцией (позицию считает cursor.js) */
+.cursor-ring span {
+  display: block; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-border);            /* запасной вариант */
+  border-color: color-mix(in srgb, var(--accent) 62%, transparent);
+  background: transparent;
+  background: color-mix(in srgb, var(--accent) 0%, transparent);
+  transition:
+    transform .3s var(--ease),
+    width .3s var(--ease), height .3s var(--ease), margin .3s var(--ease),
+    border-radius .3s var(--ease),
+    border-color .25s var(--ease), background-color .25s var(--ease);
+}
+
+/* Наведение на интерактивные элементы */
+.cursor-layer.is-hover .cursor-ring span {
+  transform: scale(1.55);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--surface) 45%, transparent);
+}
+.cursor-layer.is-hover .cursor-dot span { transform: scale(.6); }
+
+/* Нажатие */
+.cursor-layer.is-down .cursor-ring span {
+  transform: scale(.8);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.cursor-layer.is-down .cursor-dot span { transform: scale(.45); }
+
+/* Поля ввода — курсор превращается в каретку */
+.cursor-layer.is-text .cursor-ring span {
+  width: 3px; height: 26px; margin: -13px 0 0 -1.5px;
+  border-radius: 2px; border-color: transparent;
+  background: var(--accent);
+  transform: scale(1);
+}
+.cursor-layer.is-text .cursor-dot { opacity: 0; }
+
+/* Волна при клике */
+.cursor-ripple {
+  position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 75%, transparent);
+  animation: cursor-ripple .6s var(--ease) forwards;
+}
+@keyframes cursor-ripple {
+  from { transform: scale(.35); opacity: .85; }
+  to { transform: scale(3.4); opacity: 0; }
+}
+
+/* ==========================================================================
+   10. Анимации и микровзаимодействия
+   ========================================================================== */
+
+/* Индикатор прокрутки под шапкой */
+.scroll-progress {
+  position: fixed; top: var(--header-h); left: 0; right: 0; height: 2px;
+  z-index: 59; transform: scaleX(0); transform-origin: 0 50%;
+  opacity: 0; transition: opacity .3s var(--ease);
+  background: linear-gradient(90deg, var(--accent), #a855f7 55%, #ec4899);
+  pointer-events: none;
+}
+.scroll-progress.is-active { opacity: 1; }
+
+/* Шапка: мягкая тень при прокрутке */
+.site-header { transition: box-shadow .3s var(--ease); }
+.site-header.is-scrolled { box-shadow: 0 8px 26px rgba(16, 24, 40, .07); }
+[data-theme="dark"] .site-header.is-scrolled { box-shadow: 0 8px 26px rgba(0, 0, 0, .5); }
+
+/* Ссылки в навигации: подчёркивание «наезжает» слева */
+.header-nav a { position: relative; }
+.header-nav a::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px;
+  border-radius: 2px; background: var(--accent);
+  transform: scaleX(0); transform-origin: 0 50%;
+  transition: transform .3s var(--ease);
+}
+.header-nav a:hover::after { transform: scaleX(1); }
+
+/* Блик по кнопкам */
+.btn { position: relative; overflow: hidden; }
+.btn::after {
+  content: ""; position: absolute; top: -10%; bottom: -10%; width: 42%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .5), transparent);
+  transform: translateX(-170%) skewX(-18deg);
+  transition: transform .65s var(--ease);
+  pointer-events: none;
+}
+.btn:hover::after { transform: translateX(270%) skewX(-18deg); }
+.btn-ghost::after { background: linear-gradient(100deg, transparent, color-mix(in srgb, var(--accent) 14%, transparent), transparent); }
+
+/* Иконки браузеров: лёгкое увеличение и подсветка плитки */
+.icon-tile { transition: background-color .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease); }
+.icon-tile img { transition: transform .35s var(--ease); }
+.card:hover .icon-tile,
+.featured-card:hover .icon-tile {
+  background: color-mix(in srgb, var(--brand-solid, var(--accent)) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--brand-solid, var(--accent)) 38%, var(--border));
+}
+.card:hover .icon-tile img,
+.featured-card:hover .icon-tile img { transform: scale(1.09); }
+
+/* Карточки появляются каскадом */
+.card { animation-delay: calc(var(--i, 0) * 26ms); }
+
+/* Фильтры и чипы */
+.filter-item { transition: background .16s var(--ease), color .16s var(--ease), border-color .16s var(--ease), transform .22s var(--ease); }
+.filter-item:hover { transform: translateX(3px); }
+.filter-item .count { transition: background-color .2s var(--ease), color .2s var(--ease); }
+.platform-chip, .platform-tag, .tag { transition: transform .22s var(--ease), border-color .22s var(--ease), color .22s var(--ease), background-color .22s var(--ease); }
+.platform-chip:hover { transform: translateY(-2px); }
+.tag:hover { transform: translateY(-1px); border-color: var(--accent-border); color: var(--accent); }
+.card:hover .tag { border-color: var(--border-strong); }
+
+/* Пилюли активных фильтров */
+.pill { transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+.pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-xs); }
+
+/* Hero: живой градиент, пульс бейджа, плавающие пятна */
+.hero h1 .grad {
+  background-size: 220% 100%;
+  animation: grad-flow 9s ease-in-out infinite alternate;
+}
+@keyframes grad-flow {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+.hero-badge .dot { animation: dot-pulse 2.6s ease-in-out infinite; }
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 22%, transparent); }
+  50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--success) 5%, transparent); }
+}
+.hero-blobs { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.hero-blobs span { position: absolute; border-radius: 50%; filter: blur(48px); }
+.hero-blobs span:nth-child(1) {
+  width: 320px; height: 320px; top: -120px; right: 6%; opacity: .5;
+  background: color-mix(in srgb, var(--accent) 48%, transparent);
+  animation: blob-a 16s ease-in-out infinite;
+}
+.hero-blobs span:nth-child(2) {
+  width: 260px; height: 260px; bottom: -130px; left: 40%; opacity: .42;
+  background: color-mix(in srgb, #ec4899 42%, transparent);
+  animation: blob-b 21s ease-in-out infinite;
+}
+.hero-blobs span:nth-child(3) {
+  width: 210px; height: 210px; top: 26%; right: 30%; opacity: .34;
+  background: color-mix(in srgb, #a855f7 40%, transparent);
+  animation: blob-a 26s ease-in-out infinite reverse;
+}
+@keyframes blob-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-30px, 26px, 0) scale(1.08); }
+}
+@keyframes blob-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(34px, -22px, 0) scale(1.14); }
+}
+
+/* Появление содержимого модального окна */
+.modal-backdrop.open .modal-body > * { animation: card-in .42s var(--ease) both; }
+.modal-backdrop.open .modal-body > *:nth-child(1) { animation-delay: .04s; }
+.modal-backdrop.open .modal-body > *:nth-child(2) { animation-delay: .09s; }
+.modal-backdrop.open .modal-body > *:nth-child(3) { animation-delay: .14s; }
+.modal-backdrop.open .modal-body > *:nth-child(4) { animation-delay: .19s; }
+.modal-backdrop.open .modal-body > *:nth-child(5) { animation-delay: .24s; }
+.modal-backdrop.open .modal-body > *:nth-child(n+6) { animation-delay: .28s; }
+
+/* Адаптивность новых элементов */
+@media (max-width: 780px) {
+  /* на узких экранах пятна меньше и не мешают тексту */
+  .hero-blobs span:nth-child(1) { width: 220px; height: 220px; }
+  .hero-blobs span:nth-child(2) { width: 180px; height: 180px; left: 20%; }
+  .hero-blobs span:nth-child(3) { display: none; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-layer { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-layer { display: none !important; }
+  html.custom-cursor,
+  html.custom-cursor * { cursor: auto !important; }
+  .card { animation-delay: 0ms !important; }
+  .hero h1 .grad,
+  .hero-badge .dot,
+  .hero-blobs span,
+  .btn::after,
+  .scroll-progress { animation: none !important; transition: none !important; }
+}
+
+@media print {
+  .cursor-layer, .scroll-progress { display: none !important; }
+}

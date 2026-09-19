@@ -70,6 +70,8 @@
     modalContent: $('#modalContent'),
     themeToggle: $('#themeToggle'),
     toTop: $('#toTop'),
+    scrollProgress: $('#scrollProgress'),
+    siteHeader: $('.site-header'),
     statCount: $('#statCount'),
     statCats: $('#statCats'),
     year: $('#year')
@@ -168,12 +170,12 @@
     return browser.platforms.map((p) => `<span class="platform-tag">${escapeHtml(p)}</span>`).join('');
   }
 
-  function cardHtml(browser) {
+  function cardHtml(browser, index = 0) {
     const badge = browser.featured
       ? `<span class="badge">${ICONS.star}Выбор редакции</span>`
       : '';
     return `
-      <article class="card" style="--brand:${browser.color}22" data-id="${browser.id}">
+      <article class="card" style="--brand:${browser.color}22; --brand-solid:${browser.color}; --i:${Math.min(index, 10)}" data-id="${browser.id}">
         <div class="card-head">
           <span class="icon-tile">
             <img src="${browser.icon}" alt="" loading="lazy" width="52" height="52"
@@ -210,7 +212,7 @@
     const list = getFiltered();
     const total = BROWSERS.length;
 
-    els.cardsGrid.innerHTML = list.map(cardHtml).join('');
+    els.cardsGrid.innerHTML = list.map((b, i) => cardHtml(b, i)).join('');
     els.cardsGrid.hidden = list.length === 0;
     els.emptyState.hidden = list.length !== 0;
 
@@ -225,7 +227,7 @@
   function renderFeatured() {
     const featured = BROWSERS.filter((b) => b.featured).sort((a, b) => b.popularity - a.popularity);
     els.featuredGrid.innerHTML = featured.map((b) => `
-      <article class="featured-card" style="--brand:${b.color}">
+      <article class="featured-card" style="--brand:${b.color}; --brand-solid:${b.color}">
         <div class="featured-top">
           <span class="icon-tile lg">
             <img src="${b.icon}" alt="" loading="lazy" width="60" height="60"
@@ -510,10 +512,26 @@
       }
     });
 
-    // Кнопка «наверх»
+    // Прокрутка: кнопка «наверх», индикатор прогресса, тень шапки
+    let ticking = false;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      els.toTop.classList.toggle('show', y > 700);
+      els.siteHeader.classList.toggle('is-scrolled', y > 8);
+      const progress = max > 0 ? Math.min(y / max, 1) : 0;
+      els.scrollProgress.style.transform = `scaleX(${progress.toFixed(4)})`;
+      els.scrollProgress.classList.toggle('is-active', y > 40);
+      ticking = false;
+    };
     window.addEventListener('scroll', () => {
-      els.toTop.classList.toggle('show', window.scrollY > 700);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(onScroll);
+      }
     }, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
     els.toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     // Навигация по категориям из подвала

@@ -61,9 +61,13 @@
     </div>
   </header>
 
+  <!-- Индикатор прокрутки -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
   <main id="top">
     <!-- ============ Hero ============ -->
     <section class="hero">
+      <div class="hero-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="container hero-inner">
         <span class="hero-badge"><span class="dot" aria-hidden="true"></span> Все ссылки ведут только на официальные сайты разработчиков</span>
         <h1>Скачайте <span class="grad">подходящий браузер</span> за пару минут</h1>
@@ -310,7 +314,14 @@
     </div>
   </noscript>
 
+  <!-- Кастомный курсор: точка и догоняющий её кружок (включается только на устройствах с мышью) -->
+  <div class="cursor-layer" id="cursorLayer" aria-hidden="true" hidden>
+    <div class="cursor-ring" id="cursorRing"><span></span></div>
+    <div class="cursor-dot" id="cursorDot"><span></span></div>
+  </div>
+
   <script src="assets/js/data.js"></script>
+  <script src="assets/js/cursor.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>
